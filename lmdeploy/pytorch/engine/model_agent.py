@@ -668,7 +668,7 @@ class BaseModelAgent(AutoModelAgent):
                      adapters: Dict[str, str] = None,
                      trust_remote_code: bool = True):
         """build patched model."""
-        device = 'cuda'
+        device = 'auto'
         with LoadNoInit(), warnings.catch_warnings():
             warnings.simplefilter('ignore')
             hf_model = self.model_config.auto_model_cls.from_pretrained(
