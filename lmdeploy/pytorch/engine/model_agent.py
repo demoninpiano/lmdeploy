@@ -651,6 +651,7 @@ class BaseModelAgent(AutoModelAgent):
         super().__init__(model_config=model_config, cache_config=cache_config)
         torch_dtype = model_config.dtype
 
+        
         self.patched_model = self._build_model(
             model_path,
             torch_dtype=torch_dtype,
@@ -669,6 +670,7 @@ class BaseModelAgent(AutoModelAgent):
                      trust_remote_code: bool = True):
         """build patched model."""
         device = 'auto'
+        logger.info("[DW]: QA torch type:")
         with LoadNoInit(), warnings.catch_warnings():
             warnings.simplefilter('ignore')
             try:
@@ -680,6 +682,7 @@ class BaseModelAgent(AutoModelAgent):
                     **self.model_config.init_kwargs)
             except:
                 torch_dtype = torch.float16
+                logger.info("[DW]: QA torch type except branch: {}".format(torch_dtype))
                 hf_model = self.model_config.auto_model_cls.from_pretrained(
                     model_path,
                     torch_dtype=torch_dtype,
