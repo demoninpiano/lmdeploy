@@ -671,12 +671,21 @@ class BaseModelAgent(AutoModelAgent):
         device = 'auto'
         with LoadNoInit(), warnings.catch_warnings():
             warnings.simplefilter('ignore')
-            hf_model = self.model_config.auto_model_cls.from_pretrained(
-                model_path,
-                torch_dtype=torch_dtype,
-                device_map=device,
-                trust_remote_code=trust_remote_code,
-                **self.model_config.init_kwargs)
+            try:
+                hf_model = self.model_config.auto_model_cls.from_pretrained(
+                    model_path,
+                    torch_dtype=torch_dtype,
+                    device_map=device,
+                    trust_remote_code=trust_remote_code,
+                    **self.model_config.init_kwargs)
+            except:
+                torch_dtype = torch.float16
+                hf_model = self.model_config.auto_model_cls.from_pretrained(
+                    model_path,
+                    torch_dtype=torch_dtype,
+                    device_map=device,
+                    trust_remote_code=trust_remote_code,
+                    **self.model_config.init_kwargs)
             hf_model.eval()
             hf_model.config.use_cache = True
             # build for vlm model
